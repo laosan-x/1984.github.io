@@ -4,7 +4,7 @@ author: MacBlog
 email: your-email@example.com
 lang: zh-CN
 url: ""
-baseurl: ""
+baseurl: "/1984.github.io"
 
 timezone: Asia/Shanghai
 encoding: utf-8
