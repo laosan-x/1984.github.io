@@ -7,7 +7,7 @@ window_title: Macintosh HD
 <div id="search-results"></div>
 
 <ul class="article-list" id="article-list">
-    {% for post in paginator.posts %}
+    {% for post in site.posts %}
     <li class="article-item" onclick="window.location.href='{{ post.url | relative_url }}'">
         <div class="article-title">{{ post.title }}</div>
         <div class="article-desc">{{ post.excerpt | strip_html | truncatewords: 30 }}</div>
