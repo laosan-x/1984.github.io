@@ -1,0 +1,144 @@
+---
+layout: default
+title: 标签
+window_title: 标签
+permalink: /tags/
+---
+
+<div class="archive-page">
+    <h1>文章标签</h1>
+    
+    {% assign tags = site.tags | sort %}
+    
+    {% if tags.size == 0 %}
+    <p class="no-results">暂无标签</p>
+    {% else %}
+    
+    <div class="tag-cloud">
+        {% for tag in tags %}
+        <a href="#{{ tag[0] | slugify }}" class="tag-link">
+            #{{ tag[0] }} <span class="tag-count">({{ tag[1].size }})</span>
+        </a>
+        {% endfor %}
+    </div>
+    
+    <div class="tag-sections">
+        {% for tag in tags %}
+        <div class="tag-section" id="{{ tag[0] | slugify }}">
+            <h2 class="tag-title">
+                <i class="fa-solid fa-tag"></i> {{ tag[0] }}
+                <span class="tag-count">{{ tag[1].size }} 篇</span>
+            </h2>
+            <ul class="tag-posts">
+                {% for post in tag[1] %}
+                <li class="tag-post-item">
+                    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                    <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% endif %}
+</div>
+
+<style>
+.archive-page {
+    padding: 20px;
+}
+
+.archive-page h1 {
+    border-bottom: 2px solid var(--text-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid var(--text-color);
+}
+
+.tag-link {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid var(--text-color);
+    font-weight: normal;
+}
+
+.tag-link:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.tag-count {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.tag-sections {
+    margin-top: 20px;
+}
+
+.tag-section {
+    margin-bottom: 25px;
+    border: 1px solid var(--text-color);
+    padding: 15px;
+}
+
+.tag-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--text-color);
+    font-size: 1.1rem;
+}
+
+.tag-title .tag-count {
+    font-size: 0.8rem;
+    font-weight: normal;
+    opacity: 0.7;
+}
+
+.tag-posts {
+    list-style: none;
+    font-weight: normal;
+}
+
+.tag-post-item {
+    padding: 8px 5px;
+    border-bottom: 1px dotted var(--text-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tag-post-item:last-child {
+    border-bottom: none;
+}
+
+.tag-post-item:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.tag-post-item:hover a {
+    color: var(--bg-color);
+}
+
+.tag-post-item a {
+    flex-grow: 1;
+}
+
+.post-date {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+</style>

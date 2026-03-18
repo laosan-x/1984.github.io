@@ -1,0 +1,37 @@
+<section class="sidebar-section">
+    <h3 class="sidebar-title">分类</h3>
+    <ul class="category-list">
+        {% assign categories = site.categories | sort %}
+        {% for category in categories %}
+        <li class="category-item">
+            <a href="{{ '/categories/#' | append: category[0] | relative_url }}">
+                {{ category[0] }} ({{ category[1].size }})
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section class="sidebar-section">
+    <h3 class="sidebar-title">热门标签</h3>
+    <div class="tag-cloud">
+        {% assign tags = site.tags | sort %}
+        {% for tag in tags %}
+        <a href="{{ '/tags/#' | append: tag[0] | relative_url }}" class="tag">
+            #{{ tag[0] }}
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="sidebar-section">
+    <h3 class="sidebar-title">最新文章</h3>
+    <ul class="recent-posts">
+        {% for post in site.posts limit:5 %}
+        <li class="recent-post-item">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <span class="recent-post-date">{{ post.date | date: "%m-%d" }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</section>

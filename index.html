@@ -1,0 +1,76 @@
+---
+layout: default
+title: 首页
+window_title: Macintosh HD
+---
+
+<div id="search-results"></div>
+
+<ul class="article-list" id="article-list">
+    {% for post in paginator.posts %}
+    <li class="article-item" onclick="window.location.href='{{ post.url | relative_url }}'">
+        <div class="article-title">{{ post.title }}</div>
+        <div class="article-desc">{{ post.excerpt | strip_html | truncatewords: 30 }}</div>
+        <div class="article-meta">
+            <span><i class="fa-regular fa-calendar"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+            <span><i class="fa-regular fa-user"></i> {{ post.author | default: site.author }}</span>
+            {% if post.categories.size > 0 %}
+            <span><i class="fa-regular fa-folder"></i> {{ post.categories | join: ", " }}</span>
+            {% endif %}
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% if paginator.total_pages > 1 %}
+<div class="pagination">
+    {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | relative_url }}" class="pagination-prev">
+        <i class="fa-solid fa-arrow-left"></i> 上一页
+    </a>
+    {% endif %}
+    
+    <span class="pagination-info">
+        第 {{ paginator.page }} 页 / 共 {{ paginator.total_pages }} 页
+    </span>
+    
+    {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | relative_url }}" class="pagination-next">
+        下一页 <i class="fa-solid fa-arrow-right"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if site.posts.size == 0 %}
+<div class="no-results">
+    <p>暂无文章</p>
+    <p style="font-size: 0.9rem; margin-top: 10px;">请在 _posts 目录下添加 Markdown 文件</p>
+</div>
+{% endif %}
+
+<style>
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10px;
+    border-top: 1px dashed var(--text-color);
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 5px 15px;
+    border: 1px solid var(--text-color);
+}
+
+.pagination a:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+</style>

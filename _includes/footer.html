@@ -1,0 +1,25 @@
+<footer id="footer">
+    <div id="copyright-info">
+        &copy; {{ 'now' | date: "%Y" }} {{ site.title }} | 
+        <a href="{{ '/feed.xml' | relative_url }}">RSS</a> |
+        Powered by <a href="https://jekyllrb.com" target="_blank">Jekyll</a> |
+        Deploy on <a href="https://pages.github.com" target="_blank">GitHub Pages</a>
+    </div>
+    <div class="footer-icons">
+        {% if site.social.github %}
+        <a href="https://github.com/{{ site.social.github }}" target="_blank" title="GitHub">
+            <i class="fa-brands fa-github"></i>
+        </a>
+        {% endif %}
+        {% if site.social.twitter %}
+        <a href="https://twitter.com/{{ site.social.twitter }}" target="_blank" title="Twitter">
+            <i class="fa-brands fa-twitter"></i>
+        </a>
+        {% endif %}
+        {% if site.social.email %}
+        <a href="mailto:{{ site.social.email }}" title="Email">
+            <i class="fa-solid fa-envelope"></i>
+        </a>
+        {% endif %}
+    </div>
+</footer>

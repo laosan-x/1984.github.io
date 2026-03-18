@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1984 Macintosh Tech Blog</title>
+    <!-- Font Awesome for icons like Trash -->
+    <script src="https://image.uc.cn/s/uae/g/3n/mos-production/fontawesome-free-7.1.0-web/js/all.min.js"></script>
+    <link rel="stylesheet"
+        href="https://image.uc.cn/s/uae/g/3n/mos-production/fontawesome-free-7.1.0-web/css/fontawesome.min.css">
+    <style>
+        /* CSS Reset & Basic Variables */
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --border-color: #ffffff;
+            --highlight-color: #ffffff;
+            --font-stack: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --border-color: #000000;
+            --highlight-color: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-stack);
+            font-weight: bold;
+            /* Simulate Chicago font weight */
+            letter-spacing: 0.5px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Utility Classes */
+        .pixel-border {
+            border: 2px solid var(--border-color);
+        }
+
+        .pixel-img {
+            image-rendering: pixelated;
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 10px;
+            width: 100%;
+        }
+
+        /* Top Menu Bar */
+        #top-bar {
+            width: 100%;
+            height: 40px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--bg-color);
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 20px;
+        }
+
+        .menu-item {
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* Search Bar in Menu */
+        #search-container {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        #search-input {
+            background: transparent;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            padding: 2px 5px;
+            font-family: var(--font-stack);
+            width: 150px;
+        }
+
+        #search-input:focus {
+            outline: none;
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border: 1px solid var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* Main Content Area */
+        #main-content {
+            margin-top: 60px;
+            /* Space for fixed header */
+            margin-bottom: 60px;
+            /* Space for fixed footer */
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        /* Window Style */
+        .window {
+            border: 2px solid var(--text-color);
+            padding: 2px;
+            background-color: var(--bg-color);
+        }
+
+        .window-header {
+            border-bottom: 2px solid var(--text-color);
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .window-title {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .close-btn {
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--text-color);
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .close-btn:hover {
+            background-color: var(--text-color);
+        }
+
+        /* Article List Styles */
+        .article-list {
+            list-style: none;
+        }
+
+        .article-item {
+            border-bottom: 1px dashed var(--text-color);
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .article-item:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        .article-item:hover .article-meta {
+            color: var(--bg-color);
+        }
+
+        .article-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .article-desc {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+
+        .article-meta {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Article Detail Styles */
+        .detail-content {
+            padding: 10px;
+            line-height: 1.6;
+        }
+
+        .detail-content h2 {
+            border-bottom: 2px solid var(--text-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .detail-content p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .detail-content code {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            padding: 2px 4px;
+            font-family: monospace;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .back-btn:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        #footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            border-top: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background-color: var(--bg-color);
+            font-size: 0.8rem;
+            z-index: 100;
+        }
+
+        .trash-icon {
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .trash-icon:hover {
+            color: var(--text-color);
+            /* Ensure visibility */
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            #top-bar {
+                padding: 0 10px;
+            }
+
+            .menu-items {
+                display: none;
+                /* Simplify for mobile, could add hamburger if needed but keeping it retro simple */
+            }
+
+            .menu-items.mobile-visible {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 40px;
+                left: 0;
+                width: 100%;
+                background: #000;
+                border: 2px solid #fff;
+                padding: 10px;
+            }
+
+            .brand span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Menu Bar -->
+    <header id="top-bar">
+        <div class="brand" onclick="app.renderHome()">
+            <!-- Happy Mac Icon from Resource List -->
+            <img src="https://agent.qianwen.com/mos/7a55ae61174342d28551fc84bba8beea/8fed9a8cbd8183c35483d129439803b3"
+                alt="Happy Mac" class="pixel-img" onerror="this.src='https://picsum.photos/seed/mac/32/32.jpg'">
+            <span>MacBlog 84</span>
+        </div>
+
+        <nav class="menu-items">
+            <a class="menu-item" onclick="app.renderHome()">首页</a>
+            <a class="menu-item" onclick="app.renderHome()">文章</a>
+            <a class="menu-item" onclick="app.renderAbout()">关于</a>
+        </nav>
+
+        <div id="search-container" style="display: flex; align-items: center; gap: 15px;">
+            <input type="text" id="search-input" placeholder="搜索..." oninput="app.handleSearch(this.value)">
+            <div id="theme-toggle" class="theme-toggle" onclick="app.toggleTheme()" title="切换主题">
+                <i class="fa-solid fa-sun" id="theme-icon"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Window -->
+    <main id="main-content" class="container">
+        <div class="window">
+            <div class="window-header">
+                <div class="close-btn" onclick="app.renderHome()"></div>
+                <div class="window-title" id="window-title">Welcome</div>
+                <div class="close-btn" style="visibility: hidden;"></div>
+            </div>
+
+            <div id="content-area">
+                <!-- Content will be injected here via JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div id="copyright-info">
+            &copy; 2026-03-18 | Deploy on GitHub Pages
+        </div>
+        <div class="trash-icon" title="Delete / Archive" onclick="app.showTrashMsg()">
+            <i class="fa-solid fa-trash"></i>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Store
+        const articles = [
+            {
+                id: 1,
+                title: "1984年Macintosh开发历史与技术创新",
+                date: "2026-03-15",
+                author: "Steve J.",
+                desc: "回顾改变世界的时刻，探索Macintosh 128K背后的工程奇迹与GUI革命。",
+                content: `
+                    <p>1984年1月24日，苹果公司发布了Macintosh 128K。这不仅仅是一台电脑，更是一场革命。它将图形用户界面（GUI）带入了大众视野。</p>
+                    <p>Macintosh的开发团队由Jef Raskin发起，最终由Steve Jobs接管。其核心技术创新包括采用了摩托罗拉68000处理器，以及那个标志性的3.5英寸软盘驱动器。</p>
+                    <p>最令人印象深刻的是它的内存管理。尽管只有128KB的RAM，但系统设计精妙，能够在一个单面软盘上运行完整的操作系统和应用程序。这种对资源的极致优化，是现代软件开发难以想象的。</p>
+                    <p>著名的"1984"超级碗广告，向世界宣告了这台机器的诞生，也确立了苹果反叛与创新的品牌形象。</p>
+                `
+            },
+            {
+                id: 2,
+                title: "Apple II编程：BASIC语言的黄金时代",
+                date: "2026-03-10",
+                author: "Woz",
+                desc: "深入探讨Apple II时代的编程环境，以及BASIC如何点燃了个人计算的火花。",
+                content: `
+                    <p>在Apple II时代，屏幕上闪烁的光标是通往无限可能的入口。对于当时的爱好者来说，BASIC语言不仅是工具，更是魔法。</p>
+                    <p>Steve Wozniak设计的Apple II Integer BASIC极其高效，直接在硬件上运行。随后，Applesoft BASIC成为了标配，支持浮点运算，为商业和科学计算打开了大门。</p>
+                    <p>编写代码意味着直接控制硬件。你可以通过PEEK和POKE命令直接访问内存地址，控制扬声器发声，或者改变屏幕上的像素颜色。</p>
+                    <p>那个时代的编程杂志（如《Compute!》）充满了代码清单。用户需要一行行地敲入代码，调试语法错误，最终运行出简单的游戏或实用程序。这种亲手构建的成就感，是现代IDE难以替代的。</p>
+                    <pre><code>10 PRINT "HELLO WORLD"
+20 GOTO 10</code></pre>
+                `
+            },
+            {
+                id: 3,
+                title: "早期计算机图形界面设计：从施乐之星到Macintosh",
+                date: "2026-03-01",
+                author: "Designer X",
+                desc: "分析GUI设计范式的演变，以及苹果如何将施乐的实验室技术转化为用户友好的产品。",
+                content: `
+                    <p>许多人认为Macintosh发明了GUI，但实际上，这一概念最早源于施乐帕洛阿尔托研究中心（PARC）的Alto电脑。</p>
+                    <p>施乐之星展示了桌面隐喻、图标、窗口和菜单的概念。然而，施乐将其定位为昂贵的办公设备，并未意识到其面向大众的潜力。</p>
+                    <p>苹果团队在参观了施乐后，意识到了GUI的未来。但他们并没有简单地复制，而是进行了大量的改进。Macintosh引入了菜单栏的统一位置、拖拽操作以及更加一致的交互逻辑。</p>
+                    <p>更重要的是，Macintosh将这种体验装进了普通人买得起的外壳中。设计不仅仅是外观，更是为了让技术变得透明，让用户专注于创造而非操作机器本身。</p>
+                `
+            }
+        ];
+
+        // Application Logic
+        const app = {
+            state: {
+                currentView: 'home',
+                searchQuery: ''
+            },
+
+            init: function () {
+                this.loadTheme();
+                this.renderHome();
+            },
+
+            loadTheme: function () {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                this.updateThemeIcon(savedTheme);
+            },
+
+            toggleTheme: function () {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                this.updateThemeIcon(newTheme);
+            },
+
+            updateThemeIcon: function (theme) {
+                const icon = document.getElementById('theme-icon');
+                if (icon) {
+                    icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                }
+            },
+
+            // Render the list of articles
+            renderHome: function () {
+                this.state.currentView = 'home';
+                document.getElementById('window-title').innerText = 'Macintosh HD';
+
+                const contentArea = document.getElementById('content-area');
+                const filteredArticles = this.filterArticles(articles, this.state.searchQuery);
+
+                let html = '<ul class="article-list">';
+
+                if (filteredArticles.length === 0) {
+                    html += '<li style="padding:20px; text-align:center;">未找到文章</li>';
+                } else {
+                    filteredArticles.forEach(article => {
+                        html += `
+                            <li class="article-item" onclick="app.renderArticle(${article.id})">
+                                <div class="article-title">${article.title}</div>
+                                <div class="article-desc">${article.desc}</div>
+                                <div class="article-meta">发布于: ${article.date} | 作者: ${article.author}</div>
+                            </li>
+                        `;
+                    });
+                }
+                html += '</ul>';
+
+                contentArea.innerHTML = html;
+            },
+
+            // Render a single article detail
+            renderArticle: function (id) {
+                this.state.currentView = 'article';
+                const article = articles.find(a => a.id === id);
+
+                if (!article) return;
+
+                document.getElementById('window-title').innerText = article.title;
+
+                const contentArea = document.getElementById('content-area');
+
+                // Floppy Icon from Resource List for "Save" simulation
+                const floppyIconUrl = 'https://agent.qianwen.com/mos/7a55ae61174342d28551fc84bba8beea/7848ca4ebd18da4056094e60b2819223';
+
+                contentArea.innerHTML = `
+                    <div class="detail-content">
+                        <div class="back-btn" onclick="app.renderHome()">&lt; 返回列表</div>
+                        <h2>${article.title}</h2>
+                        <div class="article-meta" style="margin-bottom:20px;">
+                            发布于: ${article.date} | 作者: ${article.author}
+                        </div>
+                        ${article.content}
+                        <div style="margin-top: 40px; border-top: 1px dashed #fff; padding-top: 20px; display: flex; align-items: center; gap: 10px;">
+                            <img src="${floppyIconUrl}" alt="Save" class="pixel-img" style="cursor: pointer;" onclick="app.saveArticle()">
+                            <span style="font-size: 0.8rem; cursor: pointer;" onclick="app.saveArticle()">保存到软盘</span>
+                        </div>
+                    </div>
+                `;
+            },
+
+            // Render About Page
+            renderAbout: function () {
+                this.state.currentView = 'about';
+                document.getElementById('window-title').innerText = '关于本机';
+
+                const contentArea = document.getElementById('content-area');
+                contentArea.innerHTML = `
+                    <div class="detail-content" style="text-align: center; padding: 40px;">
+                        <img src="https://agent.qianwen.com/mos/7a55ae61174342d28551fc84bba8beea/8fed9a8cbd8183c35483d129439803b3" 
+                             alt="Happy Mac" 
+                             class="pixel-img" 
+                             style="width: 64px; height: 64px; margin-bottom: 20px;"
+                             onerror="this.style.display='none'">
+                        <h2>Macintosh Tech Blog</h2>
+                        <p style="margin-top: 20px;">版本 1.0</p>
+                        <p>致敬1984</p>
+                        <p style="margin-top: 20px; font-size: 0.8rem;">
+                            本站采用复古1984年苹果风格设计。<br>
+                            纯HTML/CSS/JS实现，无外部框架依赖。<br>
+                            部署于 GitHub Pages。
+                        </p>
+                    </div>
+                `;
+            },
+
+            // Search functionality
+            handleSearch: function (query) {
+                this.state.searchQuery = query.toLowerCase();
+                if (this.state.currentView === 'home') {
+                    this.renderHome();
+                }
+            },
+
+            filterArticles: function (list, query) {
+                if (!query) return list;
+                return list.filter(item =>
+                    item.title.toLowerCase().includes(query) ||
+                    item.desc.toLowerCase().includes(query)
+                );
+            },
+
+            // Simulated Save Function
+            saveArticle: function () {
+                // Visual feedback instead of alert
+                const btn = event.target;
+                const originalText = btn.innerText || "保存";
+
+                if (btn.tagName === 'IMG') {
+                    // If clicked the icon, find the text span next to it
+                    const span = btn.nextElementSibling;
+                    if (span) {
+                        span.innerText = "正在写入...";
+                        setTimeout(() => {
+                            span.innerText = "保存成功";
+                        }, 1000);
+                    }
+                } else {
+                    btn.innerText = "正在写入...";
+                    setTimeout(() => {
+                        btn.innerText = "保存成功";
+                    }, 1000);
+                }
+            },
+
+            // Trash interaction
+            showTrashMsg: function () {
+                const trashArea = document.getElementById('content-area');
+                const originalContent = trashArea.innerHTML;
+
+                document.getElementById('window-title').innerText = "废纸篓";
+                trashArea.innerHTML = `
+                    <div style="padding: 20px; text-align: center;">
+                        <i class="fa-solid fa-trash" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <p>废纸篓目前是空的。</p>
+                        <p style="font-size: 0.8rem; margin-top: 10px; cursor: pointer; text-decoration: underline;" onclick="app.renderHome()">清空 / 返回</p>
+                    </div>
+                `;
+            }
+        };
+
+        // Initialize App
+        window.onload = function () {
+            app.init();
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<header id="top-bar">
+    <div class="brand" onclick="goHome()">
+        <img src="{{ '/assets/images/happy-mac.png' | relative_url }}" 
+             alt="Happy Mac" 
+             class="pixel-img"
+             onerror="this.src='https://picsum.photos/seed/mac/32/32.jpg'">
+        <span>{{ site.title }}</span>
+    </div>
+    
+    <nav class="menu-items">
+        <a class="menu-item" href="{{ '/' | relative_url }}">首页</a>
+        <a class="menu-item" href="{{ '/categories/' | relative_url }}">分类</a>
+        <a class="menu-item" href="{{ '/tags/' | relative_url }}">标签</a>
+        <a class="menu-item" href="{{ '/about/' | relative_url }}">关于</a>
+    </nav>
+
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="搜索..." oninput="handleSearch(this.value)">
+        <div id="theme-toggle" class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+            <i class="fa-solid fa-sun" id="theme-icon"></i>
+        </div>
+    </div>
+</header>

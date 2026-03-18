@@ -1,0 +1,60 @@
+title: MacBlog 84
+description: 复古1984 Macintosh风格技术博客
+author: MacBlog
+email: your-email@example.com
+lang: zh-CN
+url: ""
+baseurl: ""
+
+timezone: Asia/Shanghai
+encoding: utf-8
+
+permalink: /posts/:year/:month/:day/:title/
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+
+paginate: 10
+paginate_path: "/page/:num/"
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-paginate
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "MacBlog"
+      comments: true
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
+  - LICENSE
+
+include:
+  - _pages
+
+collections_dir: collections
+
+social:
+  github: your-username
+  twitter: your-username
+  email: your-email@example.com

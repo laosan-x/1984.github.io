@@ -1,0 +1,114 @@
+---
+layout: default
+title: 分类
+window_title: 分类
+permalink: /categories/
+---
+
+<div class="archive-page">
+    <h1>文章分类</h1>
+    
+    {% assign categories = site.categories | sort %}
+    
+    {% if categories.size == 0 %}
+    <p class="no-results">暂无分类</p>
+    {% else %}
+    
+    <ul class="category-list">
+        {% for category in categories %}
+        <li class="category-item" id="{{ category[0] | slugify }}">
+            <div class="category-header">
+                <i class="fa-regular fa-folder"></i>
+                <span class="category-name">{{ category[0] }}</span>
+                <span class="category-count">{{ category[1].size }} 篇文章</span>
+            </div>
+            <ul class="category-posts">
+                {% for post in category[1] %}
+                <li class="category-post-item">
+                    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                    <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    {% endif %}
+</div>
+
+<style>
+.archive-page {
+    padding: 20px;
+}
+
+.archive-page h1 {
+    border-bottom: 2px solid var(--text-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.category-list {
+    list-style: none;
+}
+
+.category-item {
+    margin-bottom: 20px;
+    border: 1px solid var(--text-color);
+    padding: 10px;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--text-color);
+    margin-bottom: 10px;
+}
+
+.category-name {
+    font-size: 1.2rem;
+    flex-grow: 1;
+}
+
+.category-count {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.category-posts {
+    list-style: none;
+    font-weight: normal;
+}
+
+.category-post-item {
+    padding: 8px 5px;
+    border-bottom: 1px dotted var(--text-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-post-item:last-child {
+    border-bottom: none;
+}
+
+.category-post-item:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.category-post-item:hover a {
+    color: var(--bg-color);
+}
+
+.category-post-item a {
+    flex-grow: 1;
+}
+
+.post-date {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+</style>

@@ -1,0 +1,99 @@
+---
+layout: default
+---
+<article class="post-detail" itemscope itemtype="http://schema.org/BlogPosting">
+    <header class="post-header">
+        <a href="{{ '/' | relative_url }}" class="back-btn">&lt; 返回列表</a>
+        <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
+        <div class="post-meta">
+            <span class="post-date">
+                <i class="fa-regular fa-calendar"></i>
+                <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+                    {{ page.date | date: "%Y-%m-%d" }}
+                </time>
+            </span>
+            <span class="post-author">
+                <i class="fa-regular fa-user"></i>
+                <span itemprop="author">{{ page.author | default: site.author }}</span>
+            </span>
+            <span class="post-reading-time">
+                <i class="fa-regular fa-clock"></i>
+                <span id="reading-time">计算中...</span>
+            </span>
+        </div>
+        <div class="post-tags">
+            {% for tag in page.tags %}
+            <a href="{{ '/tags/#' | append: tag | relative_url }}" class="tag">#{{ tag }}</a>
+            {% endfor %}
+        </div>
+        <div class="post-category">
+            {% if page.categories.size > 0 %}
+            <i class="fa-regular fa-folder"></i>
+            {% for category in page.categories %}
+            <a href="{{ '/categories/#' | append: category | relative_url }}">{{ category }}</a>
+            {% unless forloop.last %}, {% endunless %}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.toc != false %}
+    <nav class="toc" id="toc">
+        <div class="toc-header">
+            <i class="fa-solid fa-list"></i> 目录
+            <button class="toc-toggle" onclick="toggleTOC()">[收起]</button>
+        </div>
+        <div class="toc-content" id="toc-content"></div>
+    </nav>
+    {% endif %}
+    
+    <div class="post-content" itemprop="articleBody">
+        {{ content }}
+    </div>
+    
+    <footer class="post-footer">
+        <div class="post-stats">
+            <span class="word-count">
+                <i class="fa-solid fa-font"></i>
+                字数: <span id="word-count">0</span>
+            </span>
+        </div>
+        
+        <div class="social-share">
+            <span>分享到:</span>
+            <a href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ page.url | absolute_url }}" target="_blank" title="分享到 Twitter">
+                <i class="fa-brands fa-twitter"></i>
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url }}" target="_blank" title="分享到 Facebook">
+                <i class="fa-brands fa-facebook"></i>
+            </a>
+            <a href="https://service.weibo.com/share/share.php?title={{ page.title | url_encode }}&url={{ page.url | absolute_url }}" target="_blank" title="分享到微博">
+                <i class="fa-brands fa-weibo"></i>
+            </a>
+            <a href="javascript:void(0)" onclick="copyLink()" title="复制链接">
+                <i class="fa-solid fa-link"></i>
+            </a>
+        </div>
+        
+        <div class="post-navigation">
+            {% if page.previous.url %}
+            <a href="{{ page.previous.url | relative_url }}" class="prev-post">
+                <i class="fa-solid fa-arrow-left"></i> {{ page.previous.title | truncatewords: 8 }}
+            </a>
+            {% endif %}
+            {% if page.next.url %}
+            <a href="{{ page.next.url | relative_url }}" class="next-post">
+                {{ page.next.title | truncatewords: 8 }} <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            {% endif %}
+        </div>
+    </footer>
+</article>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    generateTOC();
+    calculateReadingTime();
+    calculateWordCount();
+});
+</script>
